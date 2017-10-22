@@ -1,5 +1,11 @@
-// mrb2vmd.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
-//
+/**
+ mrb_file.c
+
+ Copyright (c) 2017 kapuusagi
+
+ This software is released under the MIT License.
+ http://opensource.org/licenses/mit-license.php
+*/
 
 #include "stdafx.h"
 
@@ -84,7 +90,7 @@ write_vmd(const struct MRBAnimationData &data, const char *path)
 		return ENODATA;
 	}
 
-	fp = fopen(path, "w");
+	fp = fopen(path, "wb");
 	if (fp == nullptr) {
 		return errno;
 	}
@@ -120,16 +126,17 @@ write_vmd(const struct MRBAnimationData &data, const char *path)
 				const struct MRBAnimationBone &b = data.data.at(bone);
 				const struct MRBAnimationBoneData &d = b.frames.at(frame);
 				struct vmd_file::VMDMotionRecord record;
+				memset(record.bone_name, 0x0, sizeof(record.bone_name));
+				memset(record.interpolation, 0x0, sizeof(record.interpolation));
 				snprintf(record.bone_name, sizeof(record.bone_name), "%s", b.name.c_str());
 				record.frame_no = frame;
-				record.pos.x = d.move.x;
+				record.pos.x = -d.move.x;
 				record.pos.y = d.move.y;
 				record.pos.z = d.move.z;
-				record.rotation.x = d.rotation.x;
+				record.rotation.x = -d.rotation.x;
 				record.rotation.y = d.rotation.y;
 				record.rotation.z = d.rotation.z;
 				record.rotation.w = d.rotation.w;
-				memset(record.suport, 0x0, sizeof(record.suport));
 				fwrite(&record, sizeof(record), 1, fp);
 			}
 		}

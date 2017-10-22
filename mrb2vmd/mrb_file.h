@@ -1,3 +1,11 @@
+/**
+ mrb_file.h
+
+ Copyright (c) 2017 kapuusagi
+
+ This software is released under the MIT License.
+ http://opensource.org/licenses/mit-license.php
+*/
 #ifndef MRB_FILE_H
 #define MRB_FILE_H
 

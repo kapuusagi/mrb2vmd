@@ -1,3 +1,11 @@
+/**
+ mrb_file.c
+
+ Copyright (c) 2017 kapuusagi
+
+ This software is released under the MIT License.
+ http://opensource.org/licenses/mit-license.php
+*/
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -185,15 +193,15 @@ read_mrb_bone(uint32_t flag, const void *read_bufp, size_t len, struct MRBBoneDa
 	return true;
 }
 
-#define ANIM_DATAF_BONENAME   (1 << 0)
+#define ANIM_DATAF_UNKNOWN1NAME   (1 << 0)
 #define ANIM_DATAF_KEYFRAME   (1 << 1)
-#define ANIM_DATAF_BONE       (1 << 2)
+#define ANIM_DATAF_UNKNOWN1   (1 << 2)
 #define ANIM_DATAF_EFFECT     (1 << 3)
 #define ANIM_DATAF_UNKNOWN    (1 << 4)
 #define ANIM_DATAF_MOVE       (1 << 5)
 #define ANIM_DATAF_QUATERNION (1 << 6)
 #define ANIM_DATAF_SCALE      (1 << 7)
-#define ANIM_DATAF_KEY        (1 << 8)
+#define ANIM_DATAF_BONE        (1 << 8)
 
 struct mrb_vector {
 	float x;
@@ -220,7 +228,7 @@ read_mrb_animation(uint32_t flag, const void *read_bufp, size_t len, struct MRBA
 	std::vector<struct mrb_vector> scales;
 
 	// Bone name list
-	if (flag & ANIM_DATAF_BONENAME) {
+	if (flag & ANIM_DATAF_UNKNOWN1NAME) {
 		size_t bone_list_length = ptr[0] * ptr[1];
 		size_t bone_list_area_size;
 		const char *namep;
@@ -256,13 +264,13 @@ read_mrb_animation(uint32_t flag, const void *read_bufp, size_t len, struct MRBA
 	}
 
 
-	// 
-	if (flag & ANIM_DATAF_BONE) {
-		size_t bone_count = ptr[0];
-		size_t bone_dsize = ptr[1];
+	// Unknown
+	if (flag & ANIM_DATAF_UNKNOWN1) {
+		size_t unknown_count = ptr[0];
+		size_t unknown_dsize = ptr[1];
 		ptr += 2;
-		ptr += ((bone_dsize / 4) * bone_count);
-		total += (4 * 2 + bone_dsize * bone_count);
+		ptr += ((unknown_dsize / 4) * unknown_count);
+		total += (4 * 2 + unknown_dsize * unknown_dsize);
 	}
 
 	// effect
@@ -332,17 +340,16 @@ read_mrb_animation(uint32_t flag, const void *read_bufp, size_t len, struct MRBA
 	}
 
 	// Key
-	if (flag & ANIM_DATAF_KEY) {
-		size_t key_count = ptr[0];
-		size_t key_dsize = ptr[1];
-		size_t key_area_size = ((key_count * key_dsize + 3) / 4) * 4;
-		size_t bone_count;
+	if (flag & ANIM_DATAF_BONE) {
+		size_t bone_count = ptr[0];
+		size_t bone_dsize = ptr[1];
+		size_t key_area_size = ((bone_count * bone_dsize + 3) / 4) * 4;
 		size_t bone_no;
 		size_t frame;
 		const uint16_t *bone_datap;
 		ptr += 2;
 
-		bone_count = key_dsize / key_frame_count;
+		size_t key_count = bone_dsize / (sizeof(uint16_t) * 3);
 		bone_datap = (const uint16_t*)(ptr);
 		for (bone_no = 0; bone_no < bone_count; bone_no++) {
 			struct MRBAnimationBone bone;

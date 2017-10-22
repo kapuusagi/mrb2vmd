@@ -1,3 +1,11 @@
+/**
+ mrb_file.c
+
+ Copyright (c) 2017 kapuusagi
+
+ This software is released under the MIT License.
+ http://opensource.org/licenses/mit-license.php
+*/
 #ifndef VMD_FILE_H
 #define VMD_FILE_H
 
@@ -7,6 +15,7 @@ namespace vmd_file {
 
 #define VMD_FILE_SIGNATURE "Vocaloid Motion Data 0002"
 
+#pragma pack(1)
 struct VMDMotionRecord {
 	char bone_name[15];
 	uint32_t frame_no;
@@ -21,7 +30,7 @@ struct VMDMotionRecord {
 		float z;
 		float w;
 	} rotation;
-	uint8_t suport[64];
+	uint8_t interpolation[64];
 };
 
 struct VMDSkinRecord {
@@ -67,6 +76,7 @@ struct VMDShadowRecord {
 	uint8_t mode;
 	float distance;
 };
+#pragma pack()
 
 } // namespace vmd_file
 
