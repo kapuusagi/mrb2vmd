@@ -191,7 +191,7 @@ write_vmd(const struct MRBAnimationData &data, const char *path)
                     float x = d.rotation.x;
                     float y = d.rotation.y;
                     float z = d.rotation.z;
-                    float w = d.rotation.z;
+                    float w = d.rotation.w;
                     float r2 = sqrt(2.0f);
 
                     record.rotation.x = x / r2 + z / r2;
