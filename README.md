@@ -14,4 +14,7 @@ Refer documents.
    VMD file format  :
      ’Ê‚è‚·‚ª‚è‚Ì‹L‰¯ ƒuƒƒO
      URL: http://blog.goo.ne.jp/torisu_tetosuki/e/bc9f1c4d597341b394bd02b64597499d
+   
+     VMD file format description.
+     https://datatypes.net/open-vmd-files
 
